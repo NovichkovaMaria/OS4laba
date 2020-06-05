@@ -10,7 +10,7 @@ namespace OS4laba
 	{
 		private List<FatRecord> fat;
 		private List<DiskCluster> dataRegion;
-		private Dictionary<string, int> fileNames;
+		private List<File> files;
 
 		public Main()
 		{
@@ -21,7 +21,7 @@ namespace OS4laba
 				fat.Insert(i, new FatRecord());
 				dataRegion.Insert(i, new DiskCluster());
 			}
-			fileNames = new Dictionary<string, int>();
+			files = new List<File>();
 		}
 
 		private int getFreeSpace()
@@ -46,7 +46,7 @@ namespace OS4laba
 			else
 			{
 				int fileStart = firstFreeCluster();
-				fileNames.Add(fileName, fileStart);
+				files.Add(new File(fileName, fileStart));
 				if (data.Length > 0)
 				{
 					write(data, fileStart);
@@ -93,12 +93,8 @@ namespace OS4laba
 		public char[] getFile(string fileName)
 		{
 			char[] data = new char[0];
-			int cluster;
-			try
-			{
-				cluster = fileNames[fileName];
-			}
-			catch (Exception ex)
+			int cluster = getFirstCluster(fileName);
+			if (cluster == -1)
 			{
 				Console.WriteLine("File not found");
 				return null;
@@ -140,12 +136,8 @@ namespace OS4laba
 
 		public void deleteFile(string fileName)
 		{
-			int fileStart;
-			try
-			{
-				fileStart = fileNames[fileName];
-			}
-			catch (Exception ex)
+			int fileStart = getFirstCluster(fileName);
+			if (fileStart == -1)
 			{
 				Console.WriteLine("File not found");
 				return;
@@ -156,8 +148,32 @@ namespace OS4laba
 				fileStart = fat[fileStart].next;
 			}
 			fat[fileStart].isBusy = false;
-			fileNames.Remove(fileName);
+			files.RemoveAt(getFileId(fileName));
 			Console.WriteLine("File removed");
+		}
+		private int getFirstCluster(string filename)
+		{
+			foreach (File file in files)
+			{
+				if (file.name == filename)
+				{
+					return file.firstBlock;
+				}
+			}
+			return -1;
+		}
+		private int getFileId(string filename)
+		{
+			int i = 0;
+			foreach (File file in files)
+			{
+				if (file.name == filename)
+				{
+					return i;
+				}
+				i++;
+			}
+			return -1;
 		}
 	}
 }
