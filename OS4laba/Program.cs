@@ -21,8 +21,7 @@ namespace OS4laba
 				string[] splitted = input.Split(' ');
 				if (splitted[0].Equals("create") && splitted.Length == 3)
 				{
-					File newFile = new File(splitted[1], splitted[2].ToCharArray());
-					main.writeFile(newFile);
+					main.writeFile(splitted[1], splitted[2].ToCharArray());
 					continue;
 				}
 				if (splitted[0].Equals("delete") && splitted.Length == 2)
@@ -32,9 +31,9 @@ namespace OS4laba
 				}
 				if (splitted[0].Equals("get") && splitted.Length == 2)
 				{
-					File file = main.getFile(splitted[1]);
-					if (file != null)
-						Console.WriteLine(file.data);
+					char[] data = main.getFile(splitted[1]);
+					if (data != null)
+						Console.WriteLine(data);
 					continue;
 				}
 				Console.WriteLine("Wrong format!");

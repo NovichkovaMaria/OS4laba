@@ -9,12 +9,10 @@ namespace OS4laba
 	public class File
 	{
 		public string name { get; private set; }
-		public char[] data { get; private set; }
 
-		public File(string name, char[] data)
+		public File(string name)
 		{
 			this.name = name;
-			this.data = data;
 		}
 	}
 }

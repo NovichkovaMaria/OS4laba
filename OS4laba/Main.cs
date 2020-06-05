@@ -37,10 +37,8 @@ namespace OS4laba
 			return freeClusters * (int)SystemInfo.CLUSTER_SIZE;
 		}
 
-		public void writeFile(File newFile)
+		public void writeFile(string fileName, char[] data)
 		{
-			char[] data = newFile.data;
-			string fileName = newFile.name;
 			if (getFreeSpace() < data.Length)
 			{
 				Console.WriteLine("Not enougn space on disk");
@@ -92,7 +90,7 @@ namespace OS4laba
 			return -1;
 		}
 
-		public File getFile(string fileName)
+		public char[] getFile(string fileName)
 		{
 			char[] data = new char[0];
 			int cluster;
@@ -137,7 +135,7 @@ namespace OS4laba
 				temp[i] = block[j];
 			}
 			data = temp;
-			return new File(fileName, data);
+			return data;
 		}
 
 		public void deleteFile(string fileName)
